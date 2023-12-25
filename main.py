@@ -1,22 +1,26 @@
 #import dependncies
-import colorama
-import requests
+from colorama import Fore, init
 from bs4 import BeautifulSoup
 from urllib.request  import urlopen
 import lxml
 import os 
-
+import sys
 #global variables
 BASE_URL="https://www.wirefly.com/area-codes"
 npa=[]
 nxx=[]
-
+init()
 #collect city to scrape
-state =input("Enter state: ").lower()
+print(Fore.YELLOW+"WELCOME TO AREA CODE SCRAPER")
+print("")
+state =input(Fore.BLUE+"Enter state: ").lower()
 state=state.replace(" ","-")
+print("")
 city = input("Enter city to get area-codes: ").lower()
 city=city.replace(" ","-")
-full = int(input("Generate type  0 for area-codes only, 1 for phone numbers : "))
+print("")
+print(Fore.YELLOW+"Extracting.......................")
+#full = int(input("Generate type  0 for area-codes only, 1 for phone numbers : "))
 
 
 # path variables 
@@ -62,7 +66,7 @@ for mode in modes:
 
 
 #make and check directories
-if full == 1:
+if True:
     if not os.path.exists(landline_num_path):
         os.makedirs(landline_num_path)
     if not os.path.exists(wireless_num_path):
@@ -78,8 +82,14 @@ for number in numbers:
     #write into file
     with open(f"results/{number[1]}/{city}/area-codes/{number[2]}.txt", "a") as file:
         file.write(f"{number[0]}\n")
-
-print("done")
-
+print(" ")
+print(Fore.GREEN+"DONE.................")
+print("")
+cont=input(Fore.RED+"Would you like to generate for new city Y/N: ").lower()
+if cont == "y":
+    os.system("cls")
+    os.execv(sys.executable, ['python']+sys.argv)
+else:
+    exit()
 
 # scrape city
