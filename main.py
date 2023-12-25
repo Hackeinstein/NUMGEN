@@ -4,21 +4,28 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.request  import urlopen
 import lxml
+import os 
 
 #global variables
 BASE_URL="https://www.wirefly.com/area-codes"
 npa=[]
 nxx=[]
 
-# collect city to scrape
-# state_needed=input("Enter state: ").lower()
-# city_needed = input("Enter city to get area-codes: ").lower()
-# gen_type = int(input("Generate type  1 for area-codes only 0 for phone numbers : "))
+#collect city to scrape
+state =input("Enter state: ").lower()
+city = input("Enter city to get area-codes: ").lower()
+full = int(input("Generate type  1 for area-codes only 0 for phone numbers : "))
 
 
+# path variables 
+
+landline_code_path=f"./results/landline/{city}/area-codes"
+landline_num_path=f"./results/landline/{city}/phone-numbers"
+wireless_code_path=f"./results/wireless/{city}/area-codes"
+wireless_num_path=f"./results/wireless/{city}/phone-numbers"
 # load site as soup 
 #url=f'{BASE_URL}/{state_needed}/{city_needed}'
-url="https://www.wirefly.com/area-codes/north-carolina/apex"
+url=f"https://www.wirefly.com/area-codes/{state}/{city}"
 page= urlopen(url)
 html_source= page.read().decode("utf-8")
 soup = BeautifulSoup(html_source, features="lxml")
@@ -37,17 +44,37 @@ if npa ==[] or nxx==[]:
 #obtain interger data values
 npa = [int(item.get_text().strip(" ")) for item in npa]
 nxx = [int(item.get_text().strip(" ")) for item in nxx]
-modes = [item.get_text().strip(" ") for item in modes]
+modes = [item.get_text().strip(" ").lower() for item in modes]
 carrier = [item.get_text().strip(" ") for item in carrier]
+
+# create a super list
+numbers =[]
 index=0
-
-
 for mode in modes:
-    if mode == "Wireless":
-        print("Yes")
-    index=index+1
+    numbers.append([f'{npa[index]}{nxx[index]}',mode,carrier[index]])
+    index=+1
 
-#print(new)
-#save values
+
+
+#make and check directories
+if full == 1:
+    if not os.path.exists(landline_num_path):
+        os.makedirs(landline_num_path)
+    if not os.path.exists(wireless_num_path):
+        os.makedirs(wireless_num_path)
+
+if not os.path.exists(landline_code_path):
+    os.makedirs(landline_code_path)
+if not os.path.exists(wireless_code_path):
+    os.makedirs(wireless_code_path)
+
+#save all area codes
+for number in numbers:
+    #write into file
+    with open(f"results/{number[1]}/{city}/area-codes/{number[2]}.txt", "a") as file:
+        file.write(f"{number[0]}\n")
+
+print("done")
+
 
 # scrape city
