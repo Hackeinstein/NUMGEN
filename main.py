@@ -13,8 +13,10 @@ nxx=[]
 
 #collect city to scrape
 state =input("Enter state: ").lower()
+state=state.replace(" ","-")
 city = input("Enter city to get area-codes: ").lower()
-full = int(input("Generate type  1 for area-codes only 0 for phone numbers : "))
+city=city.replace(" ","-")
+full = int(input("Generate type  0 for area-codes only, 1 for phone numbers : "))
 
 
 # path variables 
@@ -47,12 +49,15 @@ nxx = [int(item.get_text().strip(" ")) for item in nxx]
 modes = [item.get_text().strip(" ").lower() for item in modes]
 carrier = [item.get_text().strip(" ") for item in carrier]
 
+# print(nxx)
+# print(carrier)
+
 # create a super list
 numbers =[]
 index=0
 for mode in modes:
     numbers.append([f'{npa[index]}{nxx[index]}',mode,carrier[index]])
-    index=+1
+    index=index+1
 
 
 
