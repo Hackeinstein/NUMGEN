@@ -25,10 +25,8 @@ print(Fore.YELLOW+"Extracting.......................")
 
 # path variables 
 
-landline_code_path=f"./results/landline/{city}/area-codes"
-landline_num_path=f"./results/landline/{city}/phone-numbers"
-wireless_code_path=f"./results/wireless/{city}/area-codes"
-wireless_num_path=f"./results/wireless/{city}/phone-numbers"
+landline_code_path=f"./results/landline/{city}/"
+wireless_code_path=f"./results/wireless/{city}/"
 # load site as soup 
 #url=f'{BASE_URL}/{state_needed}/{city_needed}'
 url=f"https://www.wirefly.com/area-codes/{state}/{city}"
@@ -36,8 +34,7 @@ page= urlopen(url)
 html_source= page.read().decode("utf-8")
 soup = BeautifulSoup(html_source, features="lxml")
 
-with open("stuff.html", 'w') as file:
-    file.write(html_source)
+
 
 npa=soup.find_all("td", class_="views-field views-field-npa")
 nxx=soup.find_all("td", class_="views-field views-field-nxx")
@@ -66,12 +63,6 @@ for mode in modes:
 
 
 #make and check directories
-if True:
-    if not os.path.exists(landline_num_path):
-        os.makedirs(landline_num_path)
-    if not os.path.exists(wireless_num_path):
-        os.makedirs(wireless_num_path)
-
 if not os.path.exists(landline_code_path):
     os.makedirs(landline_code_path)
 if not os.path.exists(wireless_code_path):
@@ -80,7 +71,7 @@ if not os.path.exists(wireless_code_path):
 #save all area codes
 for number in numbers:
     #write into file
-    with open(f"results/{number[1]}/{city}/area-codes/{number[2]}.txt", "a") as file:
+    with open(f"results/{number[1]}/{city}/{number[2]}.txt", "a") as file:
         file.write(f"{number[0]}\n")
 print(" ")
 print(Fore.GREEN+"DONE.................")
